@@ -21,11 +21,14 @@ labels = digits.target
 
 sample_size = 300
 
+# #############################################################################
+# I: Load and Describe the Data
+
 print(digits.keys())
 def describeDataset (data):
-      print("n_digits: %d, \nn_samples %d, \nn_features %d \nn_labels %s"
+      print("digits: %d, \nsamples: %d, \nfeatures: %d \nlabels: %s"
       % (n_digits, n_samples, n_features, labels))
-      printImages(digits.data[:5], ["Training: " + str(x) for x in digits.target[:5]])
+      # printImages(digits.data[:5], ["Training: " + str(x) for x in digits.target[:5]])
 
 def printImages(images, labels):
       plt.figure(figsize=(20,4))
@@ -37,25 +40,32 @@ def printImages(images, labels):
 
 describeDataset(data)
 
+# #############################################################################
+# II: Cluster the Data
 print(82 * '_')
 
-bench_k_means(KMeans(init='k-means++', n_clusters=n_digits, n_init=10),
-              name="k-means++", data=data)
+kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
+kmeans.fit(data)
 
-bench_k_means(KMeans(init='random', n_clusters=n_digits, n_init=10),
-              name="random", data=data)
-
-# in this case the seeding of the centers is deterministic, hence we run the
-# kmeans algorithm only once with n_init=1
-pca = PCA(n_components=n_digits).fit(data)
-bench_k_means(KMeans(init=pca.components_, n_clusters=n_digits, n_init=1),
-              name="PCA-based",
-              data=data)
-print(82 * '_')
 
 # #############################################################################
-# Visualize the results on PCA-reduced data
+# III: Visualize the data
+print(82 * '_')
 
+# ##################################
+# III (a): Print defining images
+kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
+kmeans.fit_predict(data)
+
+centroids = kmeans.cluster_centers_
+
+# centroIDs = [index for index, point in enumerate(data) if point in centroids]
+
+for centroid in centroids:
+      print(centroid)
+
+# ##################################
+# III (b): Dimensionality Reduction
 reduced_data = PCA(n_components=2).fit_transform(data)
 kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
 kmeans.fit(reduced_data)
