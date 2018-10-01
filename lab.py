@@ -3,17 +3,18 @@ from sklearn.datasets import load_digits
 from time import time
 import numpy as np
 import matplotlib.pyplot as plt
-
+import math
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.datasets import load_digits
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import robust_scale, scale
+from sklearn.preprocessing import RobustScaler, StandardScaler
 
 np.random.seed(42)
 
 digits = load_digits()
-data = scale(digits.data)
+scaler = StandardScaler()
+data = scaler.fit_transform(digits.data)
 
 n_samples, n_features = data.shape
 n_digits = len(np.unique(digits.target))
@@ -33,7 +34,7 @@ def describeDataset (data):
 def printImages(images, labels):
       plt.figure(figsize=(20,4))
       for index, (image, label) in enumerate(zip(images, labels)):
-            plt.subplot(1, 5, index + 1)
+            plt.subplot(1, len(images), index + 1)
             plt.imshow(np.reshape(image, (8,8)), cmap=plt.cm.gray)
             plt.title(label, fontsize = 20)
       plt.show()
@@ -57,12 +58,9 @@ print(82 * '_')
 kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
 kmeans.fit_predict(data)
 
-centroids = kmeans.cluster_centers_
+centroids = [scaler.inverse_transform(x) for x in kmeans.cluster_centers_]
 
-# centroIDs = [index for index, point in enumerate(data) if point in centroids]
-
-for centroid in centroids:
-      print(centroid)
+printImages(centroids, ["Group " + str(x) for x in range(10)])
 
 # ##################################
 # III (b): Dimensionality Reduction
