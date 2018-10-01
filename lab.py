@@ -23,14 +23,11 @@ sample_size = 300
 
 print(digits.keys())
 def describeDataset (data):
-      n_samples, n_features = data.shape
-      n_digits = len(np.unique(digits.target))
-      labels = digits.target
-      # 
       print("n_digits: %d, \t n_samples %d, \t n_features %d"
       % (n_digits, n_samples, n_features))
       #Name of attributes
       print(digits.target_names)
+      printImages(digits.data[:5], ["Training: " + str(x) for x in digits.target[:5]])
 
 def printImages(images, labels):
       plt.figure(figsize=(20,4))
@@ -41,25 +38,8 @@ def printImages(images, labels):
       plt.show()
 
 describeDataset(data)
-printImages(digits.data[:5], ["Training: " + str(x) for x in digits.target[:5]])
 
 print(82 * '_')
-print('init\t\ttime\tinertia\thomo\tcompl\tv-meas\tARI\tAMI\tsilhouette')
-
-
-def bench_k_means(estimator, name, data):
-    t0 = time()
-    estimator.fit(data)
-    print('%-9s\t%.2fs\t%i\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f'
-          % (name, (time() - t0), estimator.inertia_,
-             metrics.homogeneity_score(labels, estimator.labels_),
-             metrics.completeness_score(labels, estimator.labels_),
-             metrics.v_measure_score(labels, estimator.labels_),
-             metrics.adjusted_rand_score(labels, estimator.labels_),
-             metrics.adjusted_mutual_info_score(labels,  estimator.labels_),
-             metrics.silhouette_score(data, estimator.labels_,
-                                      metric='euclidean',
-                                      sample_size=sample_size)))
 
 bench_k_means(KMeans(init='k-means++', n_clusters=n_digits, n_init=10),
               name="k-means++", data=data)
