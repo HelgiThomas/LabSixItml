@@ -8,13 +8,17 @@ from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.datasets import load_digits
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import robust_scale, scale
 from sklearn.model_selection import train_test_split
 
 np.random.seed(42)
 
 digits = load_digits()
 data = scale(digits.data)
+
+n_samples, n_features = data.shape
+n_digits = len(np.unique(digits.target))
+labels = digits.target
 
 sample_size = 300
 
@@ -29,22 +33,21 @@ def describeDataset (data):
       #Name of attributes
       print(digits.target_names)
 
-def printImages(digits):
+def printImages(images, labels):
       plt.figure(figsize=(20,4))
-      for index, (image, label) in enumerate(zip(digits.data[0:5], digits.target[0:5])):
+      for index, (image, label) in enumerate(zip(images, labels)):
             plt.subplot(1, 5, index + 1)
             plt.imshow(np.reshape(image, (8,8)), cmap=plt.cm.gray)
-            plt.title('Training: %i\n' % label, fontsize = 20)
-      #plt.show()
+            plt.title(label, fontsize = 20)
+      plt.show()
 
 def splitData(digits):
       x_train, x_test, y_train, y_test = train_test_split(digits.data, digits.target, test_size=0.25, random_state=0)
 
 describeDataset(data)
-printImages(digits)
+printImages(digits.data[:5], ["Training: " + str(x) for x in digits.target[:5]])
 splitData(digits)
 
-'''
 print(82 * '_')
 print('init\t\ttime\tinertia\thomo\tcompl\tv-meas\tARI\tAMI\tsilhouette')
 
@@ -117,4 +120,3 @@ plt.ylim(y_min, y_max)
 plt.xticks(())
 plt.yticks(())
 plt.show()
-'''
