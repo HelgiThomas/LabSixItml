@@ -23,10 +23,8 @@ sample_size = 300
 
 print(digits.keys())
 def describeDataset (data):
-      print("n_digits: %d, \t n_samples %d, \t n_features %d"
-      % (n_digits, n_samples, n_features))
-      #Name of attributes
-      print(digits.target_names)
+      print("n_digits: %d, \nn_samples %d, \nn_features %d \nn_labels %s"
+      % (n_digits, n_samples, n_features, labels))
       printImages(digits.data[:5], ["Training: " + str(x) for x in digits.target[:5]])
 
 def printImages(images, labels):
