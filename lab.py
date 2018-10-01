@@ -9,7 +9,6 @@ from sklearn.cluster import KMeans
 from sklearn.datasets import load_digits
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import robust_scale, scale
-from sklearn.model_selection import train_test_split
 
 np.random.seed(42)
 
@@ -41,12 +40,8 @@ def printImages(images, labels):
             plt.title(label, fontsize = 20)
       plt.show()
 
-def splitData(digits):
-      x_train, x_test, y_train, y_test = train_test_split(digits.data, digits.target, test_size=0.25, random_state=0)
-
 describeDataset(data)
 printImages(digits.data[:5], ["Training: " + str(x) for x in digits.target[:5]])
-splitData(digits)
 
 print(82 * '_')
 print('init\t\ttime\tinertia\thomo\tcompl\tv-meas\tARI\tAMI\tsilhouette')
